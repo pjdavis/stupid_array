@@ -114,7 +114,7 @@ RSpec.describe StupidArray do
 
       it "leaves the original StupidArray" do
         sa = StupidArray.new(3)
-        sa + StupidArray.new(3)
+        (sa + StupidArray.new(3))
         expect(sa.length).to eq 3
       end
 
@@ -135,7 +135,7 @@ RSpec.describe StupidArray do
       it "leaves the original StupidArray" do
         sa = StupidArray.new([1, 2, 3, 4])
         sa2 = StupidArray.new([1])
-        sa - sa2
+        (sa - sa2)
         expect(sa.length).to eq 4
       end
     end
@@ -528,12 +528,12 @@ RSpec.describe StupidArray do
       context "#dig" do
         it "extracts an element from a StupidArray" do
           sa = StupidArray.new([1, 2, 3])
-          expect(sa.dig(1)).to eq 2
+          expect(sa[1]).to eq 2
         end
 
         it "returns nil if an element is nil" do
           sa = StupidArray.new([1, 2, 3])
-          expect(sa.dig(5)).to be nil
+          expect(sa[5]).to be nil
         end
 
         it "returns nested digs" do
@@ -623,7 +623,7 @@ RSpec.describe StupidArray do
       context "with a random number generator" do
         it "returns a random element based on the RNG" do
           rng = Class.new
-          rng.define_singleton_method(:rand) { |number| 1 }
+          rng.define_singleton_method(:rand) { |_number| 1 }
           sa = StupidArray.new([1, 2, 3, 4, 5])
           expect(sa.sample(random: rng)).to eq 2
         end
@@ -631,7 +631,7 @@ RSpec.describe StupidArray do
       context "with an integer and a random number generator" do
         it "returns a random element based on the RNG" do
           rng = Class.new
-          rng.define_singleton_method(:rand) { |number| 1 }
+          rng.define_singleton_method(:rand) { |_number| 1 }
           sa = StupidArray.new([1, 2, 3, 4, 5])
           expect(sa.sample(2, random: rng)).to eq [2, 3]
         end
@@ -655,13 +655,13 @@ RSpec.describe StupidArray do
       context "with rng" do
         it "returns the StupidArray shuffled based on the RNG" do
           rng = Class.new
-          rng.define_singleton_method(:rand) { |number| 1 }
+          rng.define_singleton_method(:rand) { |_number| 1 }
           sa = StupidArray.new([1, 2, 3, 4, 5])
           expect(sa.shuffle).to eq [4, 2, 3, 1, 5]
         end
         it "returns a StupidArray" do
           rng = Class.new
-          rng.define_singleton_method(:rand) { |number| 1 }
+          rng.define_singleton_method(:rand) { |_number| 1 }
           sa = StupidArray.new([1, 2, 3, 4, 5])
           expect(sa.shuffle).to be_a StupidArray
         end
@@ -764,7 +764,7 @@ RSpec.describe StupidArray do
       it "returns a -1 when StupidArray is smaller than other" do
         sa = StupidArray.new([1])
         sa2 = StupidArray.new([2])
-        expect(sa <=> sa2).to eq -1
+        expect(sa <=> sa2).to eq(-1)
       end
 
       it "returns 0 when StupidArray is equal to other" do
@@ -788,7 +788,7 @@ RSpec.describe StupidArray do
       it "compares after end of StupidArray" do
         sa = StupidArray.new([1, 2])
         sa2 = StupidArray.new([1, 2, 3])
-        expect(sa <=> sa2).to eq -1
+        expect(sa <=> sa2).to eq(-1)
       end
 
       it "compares after end of other" do
@@ -806,28 +806,6 @@ RSpec.describe StupidArray do
   end
 
   context "checking the size of the StupidArray" do
-    context ".length" do
-      it "returns the size of the StupidArray" do
-        sa = StupidArray.new(3)
-        expect(sa.length).to eq 3
-      end
-
-      it "has size aliased to length" do
-        sa = StupidArray.new(3)
-        expect(sa.size).to eq 3
-      end
-    end
-
-    context ".empty?" do
-      it "returns true if StupidArray is empty" do
-        sa = StupidArray.new
-        expect(sa.empty?).to be true
-      end
-      it "returns false if StupidArray is not empty" do
-        sa = StupidArray.new(1)
-        expect(sa.empty?).to be false
-      end
-    end
   end
 
   context "modifying a StupidArray" do
@@ -866,17 +844,79 @@ RSpec.describe StupidArray do
         end
       end
       context "with a Range" do
-        context "with a positive start" do
-          context "and a positive end" do
-            it "replaces part of the StupidArray" do
-              sa = StupidArray.new([1,2,3,4,5,6])
-              sa[1..3] = ['a', 'b']
-              expect(sa).to eq [1, 'a', 'b', 5, 6]
+        context "that is not exclusive" do
+          context "with a positive start" do
+            context "and a positive end" do
+              it "replaces part of the StupidArray" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                sa[1..3] = %w[a b]
+                expect(sa).to eq [1, "a", "b", 5, 6]
+              end
+              it "returns the assigned value" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                ret = sa[1..3] = %w[a b]
+                expect(ret).to eq %w[a b]
+              end
+            end
+            context "and a negative end" do
+              it "replaces part of the StupidArray" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                sa[1..-2] = %w[a b]
+                expect(sa).to eq [1, "a", "b", 6]
+              end
+              it "returns the assigned value" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                ret = sa[1..-2] = %w[a b]
+                expect(ret).to eq %w[a b]
+              end
+            end
+          end
+          context "with a negative start" do
+            context "and a postitive end" do
+              xit "replaces part of the StupidArray" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                sa[-1..4] = %w[a b]
+                expect(sa).to eql
+              end
+              it "returns the assigned value"
+            end
+            context "and a negative end" do
+              it "replaces part of the StupidArray"
+              it "returns the assigned value"
             end
           end
         end
-        context "with a negative start" do
-
+        context "that is exclusive" do
+          context "with a positive start" do
+            context "and a positive end" do
+              it "replaces part of the StupidArray" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                sa[1...3] = %w[a b]
+                expect(sa).to eq [1, "a", "b", 4, 5, 6]
+              end
+              it "returns the assigned value" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                ret = sa[1...3] = %w[a b]
+                expect(ret).to eq %w[a b]
+              end
+            end
+            context "and a negative end" do
+              it "replaces part of the StupidArray" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                sa[1...-3] = %w[a b]
+                expect(sa).to eq [1, "a", "b", 4, 5, 6]
+              end
+              it "returns the assigned value" do
+                sa = StupidArray.new([1, 2, 3, 4, 5, 6])
+                ret = sa[1...-3] = %w[a b]
+                expect(ret).to eq %w[a b]
+              end
+            end
+          end
+          context "with a negative start" do
+            context "and a postitive end"
+            context "and a negative end"
+          end
         end
       end
       context "with a start and a length" do
@@ -889,27 +929,27 @@ RSpec.describe StupidArray do
             end
             it "adds the array" do
               sa = StupidArray.new([1, 2, 3, 4])
-              sa[0, 2] = ["a", "b"]
+              sa[0, 2] = %w[a b]
               expect(sa).to eq ["a", "b", 3, 4]
             end
             it "removes elements if length is past the end of the value array" do
               sa = StupidArray.new([1, 2, 3, 4])
-              sa[0, 4] = ["a", "b"]
-              expect(sa).to eq ["a", "b"]
+              sa[0, 4] = %w[a b]
+              expect(sa).to eq %w[a b]
             end
             it "keeps the beginning of the array if index is greater than 0" do
               sa = StupidArray.new([1, 2, 3, 4, 5])
-              sa[1, 2] = ["a", "b"]
+              sa[1, 2] = %w[a b]
               expect(sa).to eq [1, "a", "b", 4, 5]
             end
             it "inserts the full value of an array, even if the array is greater than the length" do
               sa = StupidArray.new([1, 2, 3, 4, 5])
-              sa[1, 1] = ["a", "b"]
+              sa[1, 1] = %w[a b]
               expect(sa).to eq [1, "a", "b", 3, 4, 5]
             end
             it "returns the value" do
               sa = StupidArray.new([1, 2, 3, 4])
-              expect(sa[1, 1] = ["a", "b"]).to eq ["a", "b"]
+              expect(sa[1, 1] = %w[a b]).to eq %w[a b]
             end
           end
           context "and a negative length" do
@@ -923,19 +963,19 @@ RSpec.describe StupidArray do
           context "and a positive length" do
             it "replaces elements in the StupidArray staring at the index to the length of the value" do
               sa = StupidArray.new([1, 2, 3, 4, 5, 6])
-              sa[-4, 1] = ["a", "b"]
+              sa[-4, 1] = %w[a b]
               expect(sa).to eq [1, 2, "a", "b", 4, 5, 6]
             end
             it "removes the original StupidArray when the length goes beyond the end" do
               sa = StupidArray.new([1, 2, 3, 4, 5, 6])
-              sa[-4, 10] = ["a", "b"]
+              sa[-4, 10] = %w[a b]
               expect(sa).to eq [1, 2, "a", "b"]
             end
           end
           context "and a negative length" do
             it "raises a StupidArray::IndexOutOfRangeError" do
               sa = StupidArray.new([1, 2, 3, 4])
-              expect { sa[-1, -1] = ["a", "b"] }.to raise_error StupidArray::IndexOutOfRangeError
+              expect { sa[-1, -1] = %w[a b] }.to raise_error StupidArray::IndexOutOfRangeError
             end
           end
         end
@@ -981,7 +1021,7 @@ RSpec.describe StupidArray do
       end
 
       it "recursively joins elements" do
-        inner_sa = StupidArray.new([:x, :y])
+        inner_sa = StupidArray.new(%i[x y])
         middle_sa = StupidArray.new([1, 2, inner_sa])
         outer_sa = StupidArray.new(["a", middle_sa, "b"])
         expect(outer_sa.join("-")).to eq "a-1-2-x-y-b"
