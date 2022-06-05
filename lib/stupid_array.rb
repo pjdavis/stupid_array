@@ -5,6 +5,10 @@ require_relative "stupid_array/querying"
 require_relative "stupid_array/comparing"
 require_relative "stupid_array/support/xxhash32"
 
+##
+# Have you ever wondered how to create variables in a loop? Well now you can!
+# This is a wrapper around instance_variable_set to allow you to easily create
+# variables inside of any loop, and reference them later.
 class StupidArray
   include Enumerable
   include Querying
@@ -33,11 +37,7 @@ class StupidArray
       return
     end
 
-    if argc.is_a?(Numeric)
-      0.upto(argc - 1) do
-        push(argv.nil? ? nil : argv)
-      end
-    end
+    0.upto(argc - 1) { push(argv.nil? ? nil : argv) } if argc.is_a?(Numeric)
   end
 
   def push(element)
@@ -80,6 +80,8 @@ class StupidArray
   alias at []
   alias slice []
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Style/OptionalArguments
   def []=(index, length = nil, value)
     if index.is_a?(Range)
       new_sa = self.class.new
@@ -126,6 +128,8 @@ class StupidArray
       new_sa.each { |element| self << element }
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Style/OptionalArguments
 
   def &(other)
     return_value = self.class.new

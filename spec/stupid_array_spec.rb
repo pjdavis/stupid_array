@@ -791,8 +791,7 @@ RSpec.describe StupidArray do
     end
   end
 
-  context "checking the size of the StupidArray" do
-  end
+  context "checking the size of the StupidArray"
 
   context "modifying a StupidArray" do
     context "#[]=" do

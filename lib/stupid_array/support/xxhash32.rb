@@ -53,6 +53,7 @@ class StupidArray
         @memsize = 0
       end
 
+      # rubocop:disable Metrics/MethodLength
       def update(bytes)
         bytes = bytes.unpack("C*") if bytes.is_a?(String)
 
@@ -93,7 +94,9 @@ class StupidArray
 
         true
       end
+      # rubocop:enable Metrics/MethodLength
 
+      # rubocop:disable Metrics/MethodLength
       def digest(val = nil)
         update val if val
 
@@ -133,13 +136,14 @@ class StupidArray
 
         h32
       end
+      # rubocop:enable Metrics/MethodLength
 
       private
 
       attr_accessor :v1, :v2, :v3, :v4
 
-      def uint32(x)
-        x & THIRTYTWO_ONES
+      def uint32(num)
+        num & THIRTYTWO_ONES
       end
     end
   end

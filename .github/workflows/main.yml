@@ -30,3 +30,30 @@ jobs:
           bundler-cache: true
       - name: Run the default task
         run: bundle exec rake
+      - name: Coverage
+        uses: joshmfrankel/simplecov-check-action@1.0.0
+        with:
+          minimum_suite_coverage: 90
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+  coverage:
+    name: Code Climate - Test Coverage
+    environment: 'Code Climate'
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1.2"
+          bundler-cache: true
+      - name: Code Climate
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
+        with:
+          coverageCommand: bundle exec rake spec
+
+
