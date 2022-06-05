@@ -1,4 +1,5 @@
 ![CI](https://github.com/pjdavis/stupid_array/actions/workflows/main.yml/badge.svg)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/eec6ff8fbf5f02c6d173/test_coverage)](https://codeclimate.com/github/pjdavis/stupid_array/test_coverage)
 # StupidArray
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/stupid_array`. To experiment with that code, run `bin/console` for an interactive prompt.
