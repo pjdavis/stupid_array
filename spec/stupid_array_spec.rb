@@ -728,20 +728,6 @@ RSpec.describe StupidArray do
   end
 
   context "comparing elements" do
-    context "#==" do
-      it "returns true if StupidArrays are the same" do
-        sa = StupidArray.new([1])
-        sa2 = StupidArray.new([1])
-        expect(sa == sa2).to be true
-      end
-
-      it "returns false if StupidArrays are not the same" do
-        sa = StupidArray.new([1])
-        sa2 = StupidArray.new([2])
-        expect(sa == sa2).to be false
-      end
-    end
-
     context "#&" do
       it "gets the intersection of the two StupidArrarys" do
         sa = StupidArray.new([1, 2, 3])

@@ -263,16 +263,6 @@ class StupidArray
     self[index]
   end
 
-  def ==(other)
-    return false unless [Array, self.class].include?(other.class)
-    return false unless length == other.length
-
-    0.upto(other.length) do |index|
-      return false unless self[index] == other[index]
-    end
-    true
-  end
-
   def each(&block)
     0.upto(length - 1).each do |index|
       block.call(self[index])

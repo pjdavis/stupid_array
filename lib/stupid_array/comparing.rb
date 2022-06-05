@@ -35,16 +35,53 @@ class StupidArray
       end
       0
     end
+
     ##
     # Returns true if both array.size == other_array.size and for each index i in array, array[i] == other_array[i]:
+    # @param other [Array, StupidArray]
+    # @return [Boolean]
     #
-    # a0 = [:foo, 'bar', 2]
-    # a1 = [:foo, 'bar', 2.0]
-    # a1 == a0 # => true
-    # [] == [] # => true
+    # @example
+    #   a0 = [:foo, 'bar', 2]
+    #   a1 = [:foo, 'bar', 2.0]
+    #   a1 == a0 # => true
+    #   [] == [] # => true
     #
     # Otherwise, returns false.
     #
     # This method is different from method Array#eql?, which compares elements using Object#eql?.
+    def ==(other)
+      return false unless [Array, self.class].include?(other.class)
+      return false unless length == other.length
+
+      0.upto(other.length) do |index|
+        return false unless self[index] == other[index]
+      end
+      true
+    end
+
+    ##
+    # Returns true if self and other_array are the same size, and if, for each index i in self, self[i].eql? other_array[i]:
+    #
+    # @param other [Array, StupidArray]
+    # @return [Boolean]
+    #
+    # @example
+    #   a0 = [:foo, 'bar', 2]
+    #   a1 = [:foo, 'bar', 2]
+    #   a1.eql?(a0) # => true
+    #
+    # Otherwise, returns false.
+    #
+    # This method is different from method Array#==, which compares using method Object#==.
+    def eql?(other)
+      return false unless [Array, self.class].include?(other.class)
+      return false unless length == other.length
+
+      0.upto(other.length) do |index|
+        return false unless self[index].eql?(other[index])
+      end
+      true
+    end
   end
 end
