@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require_relative "stupid_array/version"
-require_relative "stupid_array/querying"
-require_relative "stupid_array/comparing"
 require_relative "stupid_array/support/xxhash32"
+require_relative "stupid_array/comparing"
+require_relative "stupid_array/fetching"
+require_relative "stupid_array/querying"
 
 ##
 # Have you ever wondered how to create variables in a loop? Well now you can!
@@ -11,8 +12,9 @@ require_relative "stupid_array/support/xxhash32"
 # variables inside of any loop, and reference them later.
 class StupidArray
   include Enumerable
-  include Querying
   include Comparing
+  include Fetching
+  include Querying
 
   class Error < StandardError; end
 
@@ -47,38 +49,6 @@ class StupidArray
 
   alias << push
   alias append push
-
-  def [](index, length = nil)
-    if length.nil?
-      if index.is_a?(Range)
-        start = index.first
-        last = index.exclude_end? ? index.last - 1 : index.last
-        finish = last > last_index ? last_index : last
-        return_value = StupidArray.new
-        finish.downto(start) do |i|
-          return_value << instance_variable_get("@stupid_item_#{i}")
-        end
-        return_value.reverse
-      else
-        instance_variable_get("@stupid_item_#{index.negative? ? negative_index(index) : index}")
-      end
-    else
-      return nil if length.negative? || index > last_index
-
-      start = index.negative? ? negative_index(index) : index
-      return nil if start.negative?
-
-      finish = start + (length - 1) > last_index ? last_index : start + (length - 1)
-      return_value = self.class.new
-      finish.downto(start) do |i|
-        return_value << instance_variable_get("@stupid_item_#{i}")
-      end
-      return_value.reverse
-    end
-  end
-
-  alias at []
-  alias slice []
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Style/OptionalArguments
@@ -122,7 +92,7 @@ class StupidArray
       else
         new_sa += self[0..(negative_index(index) - 1)]
         new_sa += a_value
-        new_sa += self[(negative_index(index) + length)..last_index]
+        new_sa += self[(negative_index(index) + length)..last_index] if (negative_index(index) + length) <= size
       end
       clear
       new_sa.each { |element| self << element }

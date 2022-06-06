@@ -551,7 +551,7 @@ RSpec.describe StupidArray do
       end
     end
 
-    context "#at" do
+    xcontext "#at" do
       it "returns the element at the index" do
         sa = StupidArray.new
         sa << 1
